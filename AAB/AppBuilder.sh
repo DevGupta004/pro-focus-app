@@ -12,6 +12,16 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    --packageName)
+      packageName="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --prodBuild)
+      prodBuild="$2"
+      shift # past argument
+      shift # past value
+      ;;
     --2)
       2="$2"
       shift # past argument
@@ -36,7 +46,7 @@ set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
 
 packageLocation=${2//.//}
-
+prodBuild=false
 echo "packageLocation:::::${packageLocation}"
 echo "2:::::${2}"
 
@@ -87,22 +97,25 @@ cd $projectBase
 
 
 # Stop gradle demon and run cleaning process
-if [ $? -eq 0 ]; then
-  cd android && \
-  ./gradlew --stop && \
-  ./gradlew clean && \
-  cd .. && \
-  echo "./gradlew cleaning Done::::>>>>"
-else
-  echo "./gradlew cleaning Erorr::::>>>>"
-fi
+# if [ $? -eq 0 ]; then
+#   cd android && \
+#   ./gradlew --stop && \
+#   ./gradlew clean && \
+#   cd .. && \
+#   echo "./gradlew cleaning Done::::>>>>"
+# else
+#   echo "./gradlew cleaning Erorr::::>>>>"
+# fi
 
 
 # Start Buld Apk/AAB
 if [ "$prodBuild" = "true" ]; then
 #   yarn run release-build-aab && \
 #   git restore .
+  yarn
 else
+ adb devices && \
+ yarn && \
  yarn android
 #   yarn run release-build-apk-release && \
 #   git restore .

@@ -15,9 +15,9 @@ async function init() {
 async function buildApp(appName, packageName) {
 
     commandArr = [
-        `./ProFocus/AAB/AppBuilder.sh`,
+        `./AppBuilder.sh`,
         `--appName`, `${appName}`,
-        `--icon`, `${packageName}`,
+        `--packageName`, `${packageName}`,
     ];
 
     await RunShScript(commandArr);

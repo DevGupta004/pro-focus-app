@@ -54,34 +54,56 @@ cd $projectBase
 
 
 
-if [ -e ./android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java ]
-then
-  echo "newarchitecture exists"
+# if [ -e ./android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java ]
+# then
+#   echo "newarchitecture exists"
+# else
+#   echo "newarchitecture don't exist, creating it manually"
+#     if [[ "$OSTYPE" == "darwin"* ]]; then
+#       cp -r AAB/myapp/newarchitecture/ ${projectBase}android/app/src/main/java/$packageLocation/ && \
+#       sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java && \
+#       sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/components/MainComponentsRegistry.java && \
+#       sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/modules/MainApplicationTurboModuleManagerDelegate.java
+#       if [ $? -eq 0 ]; then
+#         echo OK
+#       else
+#         exit 1
+#       fi
+
+#     else
+#       cp -r myapp/newarchitecture/ ${projectBase}android/app/src/main/java/$packageLocation/ && \
+#       sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java && \
+#       sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/components/MainComponentsRegistry.java && \
+#       sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/modules/MainApplicationTurboModuleManagerDelegate.java
+#       if [ $? -eq 0 ]; then
+#         echo OK
+#       else
+#         exit 1
+#       fi
+#     fi
+
+# fi
+
+
+
+# Stop gradle demon and run cleaning process
+if [ $? -eq 0 ]; then
+  cd android && \
+  ./gradlew --stop && \
+  ./gradlew clean && \
+  cd .. && \
+  echo "./gradlew cleaning Done::::>>>>"
 else
-  echo "newarchitecture don't exist, creating it manually"
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      cp -r AAB/myapp/newarchitecture/ ${projectBase}android/app/src/main/java/$packageLocation/ && \
-      sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java && \
-      sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/components/MainComponentsRegistry.java && \
-      sed -i "" "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/modules/MainApplicationTurboModuleManagerDelegate.java
-      if [ $? -eq 0 ]; then
-        echo OK
-      else
-        exit 1
-      fi
-
-    else
-      cp -r myapp/newarchitecture/ ${projectBase}android/app/src/main/java/$packageLocation/ && \
-      sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java && \
-      sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/components/MainComponentsRegistry.java && \
-      sed -i "s/com.mycompany.myapp/$2/g" ${projectBase}android/app/src/main/java/$packageLocation/newarchitecture/modules/MainApplicationTurboModuleManagerDelegate.java
-      if [ $? -eq 0 ]; then
-        echo OK
-      else
-        exit 1
-      fi
-    fi
-
+  echo "./gradlew cleaning Erorr::::>>>>"
 fi
 
 
+# Start Buld Apk/AAB
+if [ "$prodBuild" = "true" ]; then
+#   yarn run release-build-aab && \
+#   git restore .
+else
+ yarn android
+#   yarn run release-build-apk-release && \
+#   git restore .
+fi

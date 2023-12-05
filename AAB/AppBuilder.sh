@@ -64,6 +64,24 @@ cd $projectBase
 
 
 
+
+# Delete files -------------------------->
+rm -rf ${projectBase}android/app/src/main/res/m*/
+
+
+
+# Setting-Up app icon -------------------------->
+echo "App icon updating::::" && \
+yarn add -D react-native-icon-generator && \
+npx react-native-icon-generator ProFocus_412.png --platform=android && \
+cp -r ${projectBase}/output/icons/* "${projectBase}android/app/src/main/res/" && \
+yarn remove react-native-icon-generator
+
+
+
+
+
+
 # if [ -e ./android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java ]
 # then
 #   echo "newarchitecture exists"

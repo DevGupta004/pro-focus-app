@@ -79,6 +79,8 @@ yarn remove react-native-icon-generator
 
 
 
+# Call script2.sh
+. lib/generateKeystore.sh
 
 
 

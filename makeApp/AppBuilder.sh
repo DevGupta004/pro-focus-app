@@ -80,8 +80,8 @@ yarn remove react-native-icon-generator
 
 
 # Call script2.sh
-. lib/generateKeystore.sh
-
+echo "Current working directory: $(pwd)"
+source "${projectBase}makeApp/lib/generateKeystore.sh"
 
 
 # if [ -e ./android/app/src/main/java/$packageLocation/newarchitecture/MainApplicationReactNativeHost.java ]

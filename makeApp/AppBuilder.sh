@@ -136,7 +136,9 @@ if [ "$prodBuild" = "true" ]; then
 else
  adb devices && \
  yarn && \
- yarn android
+ yarn android && \
+ cd android && \
+ ./gradlew assembleRelease && ./gradlew signingReport
 #   yarn run release-build-apk-release && \
 #   git restore .
 fi

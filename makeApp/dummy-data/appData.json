@@ -1,5 +1,6 @@
 {
     "appName" : "ProFocus",
     "packageName" : "com.profocus.app",
-    "androidBuild": true
+    "androidBuild": true,
+    "appType" : "timerApp"
 }

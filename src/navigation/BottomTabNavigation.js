@@ -24,8 +24,7 @@ const Screen = styled.View`
 const Logo = () => (
   <Image
     source={require('../../assets/commingSoon.png')}
-    resizeMode={'cover'}
-    style={{width: 150, height: 150}}
+    resizeMode={'center'}
   />
 );
 
@@ -80,7 +79,7 @@ const BottomTabNavigation = () => (
       whenActiveShow: TabElementDisplayOptions.ICON_ONLY,
       dotSize: DotSize.SMALL,
     }}>
-    {/* <Tabs.Screen
+    <Tabs.Screen
       name="Home"
       component={Home}
       options={{
@@ -88,7 +87,7 @@ const BottomTabNavigation = () => (
           <TabBarIcon focused={focused} tintColor={color} name="home" />
         ),
       }}
-    /> */}
+    />
     <Tabs.Screen
       name="Pomodoro"
       component={Pomodoro}

@@ -100,6 +100,7 @@ export default style = StyleSheet.create({
         fontWeight: '700',
         fontSize: 48,
         lineHeight: 58,
-        color: 'white'
+        color: 'white',
+        alignItems: 'center',
     }
 })

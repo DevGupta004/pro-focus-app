@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from 'react-native';
+import userService from '../../../services/user/userService';
 
 const LoginScreen = ({navigation}) => {
   const [emailOrMobile, setEmailOrMobile] = useState('');
@@ -10,6 +18,26 @@ const LoginScreen = ({navigation}) => {
     console.log('Email or Mobile:', emailOrMobile);
     console.log('Password:', password);
     navigation.navigate('app');
+  };
+
+  const handleRegister = async () => {
+    // Perform register action with emailOrMobile and password
+    const userData = {
+      email: emailOrMobile,
+      password: password,
+    };
+    const createUser = await userService.createUser(userData);
+    console.log('====================================');
+    console.log(createUser);
+    console.log('====================================');
+    // SHow alert if user is already registered
+    if (createUser.userId) {
+      Alert.alert('User Already Registered');
+      setIsUserAvailable(true);
+    } else {
+      Alert.alert('User Created');
+      navigation.navigate('app');
+    }
   };
 
   return (
@@ -24,7 +52,7 @@ const LoginScreen = ({navigation}) => {
               placeholder="Email or Mobile Number"
               placeholderTextColor="#ffffff"
               value={emailOrMobile}
-              onChangeText={(text) => setEmailOrMobile(text)}
+              onChangeText={text => setEmailOrMobile(text)}
             />
             <TextInput
               style={styles.input}
@@ -32,7 +60,7 @@ const LoginScreen = ({navigation}) => {
               placeholderTextColor="#ffffff"
               secureTextEntry
               value={password}
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={text => setPassword(text)}
             />
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
               <Text style={styles.loginButtonText}>Log In</Text>
@@ -40,7 +68,9 @@ const LoginScreen = ({navigation}) => {
             <TouchableOpacity style={styles.forgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.loginButton}>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={handleRegister}>
               <Text style={styles.loginButtonText}>Register</Text>
             </TouchableOpacity>
           </View>

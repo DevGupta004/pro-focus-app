@@ -2,10 +2,11 @@
 
 const apiService = require('../apiService/apiService.js');
 
+const baseURL = 'https://pro-user-api.vercel.app/users/';
+
 // Function to create a new user
 async function createUser(userData) {
     // Base URL for the user API
-    const baseURL = 'https://pro-user-api.vercel.app/users';
     
     try {
         const response = await apiService.post(baseURL, userData);
@@ -16,6 +17,18 @@ async function createUser(userData) {
     }
 }
 
+// get the user
+async function getUserById(userId) {
+    try {
+        const response = await apiService.get(baseURL + userId);
+        console.log("User fetched", response);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
-    createUser
+    createUser,
+    getUserById
 };

@@ -8,38 +8,54 @@ import {
   Alert,
 } from 'react-native';
 import userService from '../../../services/user/userService';
+import PasswordComponent from './components/passwordComponent';
 
 const LoginScreen = ({navigation}) => {
   const [emailOrMobile, setEmailOrMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [isUserAvailable, setIsUserAvailable] = useState(false);
+  const [showOtpScreen, setShowOtpScreen] = useState(true);
+  const [showPasswordScreen, setShowPasswordScreen] = useState(false);
+  const [userData, setUserData] = useState({});
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Perform login action with emailOrMobile and password
     console.log('Email or Mobile:', emailOrMobile);
     console.log('Password:', password);
-    navigation.navigate('app');
-  };
-
-  const handleRegister = async () => {
-    // Perform register action with emailOrMobile and password
     const userData = {
       email: emailOrMobile,
       password: password,
     };
-    const createUser = await userService.createUser(userData);
-    console.log('====================================');
-    console.log(createUser);
-    console.log('====================================');
-    // SHow alert if user is already registered
-    if (createUser.userId) {
+    if (!emailOrMobile.length) Alert.alert('Please enter a valid email or mobile');
+
+    const getUser = await userService.createUser(userData);
+    if (getUser.userId) {
       Alert.alert('User Already Registered');
-      setIsUserAvailable(true);
+      const getUserById = await userService.getUserById(getUser.userId);
+      setUserData(getUserById);
+      setShowPasswordScreen(true);
+    } else if(userId) {
+      
     } else {
       Alert.alert('User Created');
       navigation.navigate('app');
     }
+    // navigation.navigate('app');
   };
 
+  const handlePassword = (password) => {
+    console.log();
+    try {
+      if(userData.password === password) {
+        Alert.alert('User Authenticated successfully');
+        navigation.navigate('app');
+      } else {
+        Alert.alert('Wrong password');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.background}></View>
@@ -47,33 +63,30 @@ const LoginScreen = ({navigation}) => {
         <View style={styles.content}>
           <Text style={styles.title}>Welcome Back!</Text>
           <View style={styles.formContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email or Mobile Number"
-              placeholderTextColor="#ffffff"
-              value={emailOrMobile}
-              onChangeText={text => setEmailOrMobile(text)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#ffffff"
-              secureTextEntry
-              value={password}
-              onChangeText={text => setPassword(text)}
-            />
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={handleRegister}>
-              <Text style={styles.loginButtonText}>Register</Text>
-            </TouchableOpacity>
-          </View>
+          {!showPasswordScreen ? (
+          <>
+           <TextInput
+             style={styles.input}
+             placeholder="Email or Mobile Number"
+             placeholderTextColor="#ffffff"
+             value={emailOrMobile}
+             onChangeText={text => setEmailOrMobile(text)}
+           />
+           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+             <Text style={styles.loginButtonText}>Next</Text>
+           </TouchableOpacity>
+          </>
+          ) : null}
+          {/* <TouchableOpacity style={styles.forgotPassword}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={handleRegister}>
+            <Text style={styles.loginButtonText}>Register</Text>
+          </TouchableOpacity> */}
+          {showPasswordScreen ? <PasswordComponent handlePassword={handlePassword}></PasswordComponent> : null}
+        </View>
         </View>
       </View>
     </View>

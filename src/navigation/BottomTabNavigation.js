@@ -9,6 +9,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import HomeScreen from '../screens/home/homeScreen';
 import Welcome from '../screens/pomodoro-timer/welcome';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Profile from '../screens/profile/profileScreen';
 
 
 
@@ -58,14 +60,7 @@ const TodoList = () => (
   </Screen>
 );
 
-const Profile = () => (
-  <Screen>
-    <Logo />
-    <Text>Profile</Text>
-  </Screen>
-);
-
-const BottomTabNavigation = () => (
+const BottomTabNavigation = (props) => (
   <Tabs.Navigator
     initialRouteName="Home"
     tabBarOptions={{
@@ -109,6 +104,7 @@ const BottomTabNavigation = () => (
     <Tabs.Screen
       name="Profile"
       component={Profile}
+      props={props}
       options={{
         tabBarIcon: ({focused, color}) => (
           <TabBarIcon focused={focused} tintColor={color} name="user" />

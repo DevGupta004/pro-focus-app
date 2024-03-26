@@ -6,10 +6,19 @@ const baseURL = 'https://pro-user-api.vercel.app/users/';
 
 // Function to create a new user
 async function createUser(userData) {
-    // Base URL for the user API
-    
     try {
         const response = await apiService.post(baseURL, userData);
+        console.log("User created", response);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Function to update existing user
+async function updateUser(userData, userId) {
+    try {
+        const response = await apiService.put(baseURL + userId, userData);
         console.log("User created", response);
         return response;
     } catch (error) {
@@ -30,5 +39,6 @@ async function getUserById(userId) {
 
 module.exports = {
     createUser,
-    getUserById
+    getUserById,
+    updateUser,
 };

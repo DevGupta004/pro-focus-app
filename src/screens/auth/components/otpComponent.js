@@ -1,22 +1,24 @@
+import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 
 
 const OtpComponent = ({handleOtp}) => {
+    const [otp, setOtp] = useState('');
 
-
-
+console.log("otpotp", otp);
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Enter OTP</Text>
-            <View style={styles.inputContainer}>
-                <TextInput style={styles.input} placeholder="Enter OTP" />
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => handleOtp}>
-                    <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
-            </View>
+        <View>
+            <TextInput
+             style={styles.input}
+             placeholder="Enter your OTP"
+             placeholderTextColor="#ffffff"
+             value={otp}
+             onChangeText={text => setOtp(text)}
+           />
+           <TouchableOpacity style={styles.loginButton} onPress={() => handleOtp(otp)}>
+             <Text style={styles.loginButtonText}>Next</Text>
+           </TouchableOpacity>
         </View>
     );
 }
@@ -24,11 +26,6 @@ const OtpComponent = ({handleOtp}) => {
 export default OtpComponent;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     title: {
         fontWeight: '700',
         fontSize: 36
@@ -43,20 +40,28 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     input: {
-        width: '90%',
-        height: 50,
-        backgroundColor: '#fff',
+        width: '100%',
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#ffffff',
         borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center'
+        height: 50,
+        paddingHorizontal: 20,
+        fontSize: 16,
+        color: '#ffffff',
     },
-    buttonContainer: {
-        width: '90%',
+    loginButton: {
+        width: '100%',
         height: 50,
-        backgroundColor: '#fff',
-        borderRadius: 10,
+        backgroundColor: '#ff6e7f',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20
-    },
+        borderRadius: 10,
+        marginBottom: 10,
+      },
+      loginButtonText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#ffffff',
+      },
 });

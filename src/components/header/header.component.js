@@ -2,8 +2,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import appConfig from '../../demo-data/appConfig.json'
+import tasksService from '../../../services/tasks/tasksService';
 
-const Header = () => {
+
+const Header = ({navigation}) => {
+  console.log("navigation",navigation);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.iconContainer}>
@@ -14,6 +18,7 @@ const Header = () => {
       </TouchableOpacity>
       <Text style={styles.title}>{appConfig.appNAme}</Text>
       <TouchableOpacity style={styles.iconContainer}>
+        <Icon name="add-circle-sharp" size={25} style={styles.icon} onPress={() => navigation.navigate('profile')}/>
         <Icon name="notifications" size={25} style={styles.icon} />
       </TouchableOpacity>
     </View>
@@ -37,7 +42,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
   },
   iconContainer: {
-    padding: 5,
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
   },
   profileImage: {
     width: 32,
@@ -49,6 +55,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  icon: {
+    paddingLeft: 16
+  }
 });
 
 export default Header;

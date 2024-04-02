@@ -44,9 +44,9 @@ async function put(url, data, config) {
 }
 
 // Function for making DELETE requests
-async function del(url, data, config) {
+async function del(url) {
     try {
-        const response = await axios.delete(url, data, config);
+        const response = await axios.delete(url);
         return response.data;
     } catch (error) {
         throw error;
@@ -57,5 +57,5 @@ module.exports = {
     get,
     post,
     put,
-    del
+    del,
 };

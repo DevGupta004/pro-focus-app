@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 const Profile = props => (
@@ -13,11 +14,22 @@ const Profile = props => (
     />
     <TouchableOpacity
       style={styles.container}
-      onPress={() => props.navigation.navigate('LoginScreen')}>
+      onPress={() => handleLogout(props)}>
       <Text>Logout</Text>
     </TouchableOpacity>
   </View>
 );
+
+const handleLogout = async (props) => {
+  try {
+    // Remove user data from AsyncStorage upon logout
+    await AsyncStorage.removeItem('userId');
+    props.navigation.navigate('LoginScreen')
+    // Navigate to the login screen or perform any other necessary actions
+  } catch (error) {
+    console.error('Error removing user data from AsyncStorage:', error);
+  }
+};
 
 export default Profile;
 

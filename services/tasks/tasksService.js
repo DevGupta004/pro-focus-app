@@ -16,10 +16,20 @@ async function createTask(taskData) {
 }
 
 // Function to update existing task
-async function updateTask(taskData, userId) {
+async function updateTask(taskId, taskData) {
     try {
-        const response = await apiService.put(baseURL + userId, taskData);
-        console.log("Task created", response);
+        const response = await apiService.put(baseURL + taskId, taskData);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// Function to delete existing task
+async function deleteTask(taskId) {
+    try {
+        const response = await apiService.del(baseURL + taskId);
         return response;
     } catch (error) {
         throw error;
@@ -41,4 +51,5 @@ module.exports = {
     createTask,
     updateTask,
     getTasksUserById,
+    deleteTask,
 };

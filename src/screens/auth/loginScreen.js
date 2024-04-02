@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,30 @@ import userService from '../../../services/user/userService';
 import PasswordComponent from './components/passwordComponent';
 import OtpComponent from './components/otpComponent';
 import Icon from 'react-native-vector-icons/Feather';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../components/loader/loader';
 
 const LoginScreen = ({navigation}) => {
   const [emailOrMobile, setEmailOrMobile] = useState('');
   const [showPasswordScreen, setShowPasswordScreen] = useState(false);
   const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const userId = await AsyncStorage.getItem('userId');
+      if (userId) {
+        navigation.navigate('app');
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      } else {
+        setIsLoading(false);
+      }
+    };
+    getUserData();
+  }, []);
 
   const handleLogin = async () => {
     // Perform login action with emailOrMobile and password
@@ -25,20 +42,21 @@ const LoginScreen = ({navigation}) => {
     const userData = {
       email: emailOrMobile,
     };
-    if (!emailOrMobile.length) Alert.alert('Please enter a valid email or mobile');
+    if (!emailOrMobile.length)
+      Alert.alert('Please enter a valid email or mobile');
 
     const getUser = await userService.createUser(userData);
-    
+
     if (getUser.userId) {
       Alert.alert('User Already Registered');
       const getUserById = await userService.getUserById(getUser.userId);
-      if(getUserById.password.length && getUserById.isUserVerified) {
+      if (getUserById.password.length && getUserById.isUserVerified) {
         setUserData(getUserById);
         setShowPasswordScreen(true);
       }
     } else {
       setShowOtpScreen(true);
-      if(getUser._id) {
+      if (getUser._id) {
         setUserData(getUser);
         Alert.alert(`User Created ${getUser._id}`);
       }
@@ -46,13 +64,17 @@ const LoginScreen = ({navigation}) => {
     // navigation.navigate('app');
   };
 
-  const handleOtp = async (otp) => {
-    if(userData?.lastOtp === otp) {      
+  const handleOtp = async otp => {
+    if (userData?.lastOtp === otp) {
       const updateUserData = {
         ...userData,
         isUserVerified: true,
-      }
-      const updateUser = await userService.updateUser(updateUserData, updateUserData._id);
+      };
+      const updateUser = await userService.updateUser(
+        updateUserData,
+        updateUserData._id,
+      );
+      await AsyncStorage.setItem('userId', userData?._id);
       setUserData(updateUser);
       setShowOtpScreen(false);
       setShowPasswordScreen(true);
@@ -60,20 +82,23 @@ const LoginScreen = ({navigation}) => {
     } else {
       Alert.alert('Wrong OTP');
     }
-    
-  }
+  };
 
-  const handlePassword = async (password) => {
+  const handlePassword = async password => {
     try {
-      if(userData?.isUserVerified && userData.password === password) {
-          Alert.alert('User Authenticated successfully');
-          navigation.navigate('app');
-      } else if(!userData?.password) {
+      if (userData?.isUserVerified && userData.password === password) {
+        Alert.alert('User Authenticated successfully');
+        await AsyncStorage.setItem('userId', userData?._id);
+        navigation.navigate('app');
+      } else if (!userData?.password) {
         const updateUserData = {
           ...userData,
           password: password,
-        }
-        const updateUser = await userService.updateUser(updateUserData, updateUserData._id);
+        };
+        const updateUser = await userService.updateUser(
+          updateUserData,
+          updateUserData._id,
+        );
         setUserData(updateUser);
         Alert.alert('Password Updated successfully');
         navigation.navigate('app');
@@ -88,44 +113,58 @@ const LoginScreen = ({navigation}) => {
   const handleBack = () => {
     setShowPasswordScreen(false);
     setShowOtpScreen(false);
-  }
+  };
 
   const renderTextAndIcon = () => {
     return (
       <View style={styles.textAndIconContainer}>
         <Text style={styles.title}>Welcome Back!</Text>
         <TouchableOpacity onPress={() => handleBack()}>
-        <Icon style={styles.backIcon} name={'chevron-left'} color={'red'}></Icon>
+          <Icon
+            style={styles.backIcon}
+            name={'chevron-left'}
+            color={'red'}></Icon>
         </TouchableOpacity>
-    </View>
-    )
-  }
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.background}></View>
-      <View style={styles.contentContainer}>
-        <View style={styles.content}>
-          {renderTextAndIcon()}
-          <View style={styles.formContainer}>
-          {!showPasswordScreen && !showOtpScreen ? (
-          <>
-           <TextInput
-             style={styles.input}
-             placeholder="Email or Mobile Number"
-             placeholderTextColor="#ffffff"
-             value={emailOrMobile}
-             onChangeText={text => setEmailOrMobile(text)}
-           />
-           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-             <Text style={styles.loginButtonText}>Next</Text>
-           </TouchableOpacity>
-          </>
-          ) : null}
-          {showPasswordScreen ? <PasswordComponent handlePassword={handlePassword}></PasswordComponent> : null}
-          {showOtpScreen ? <OtpComponent handleOtp={handleOtp}/> : null}
-        </View>
-        </View>
-      </View>
+      {isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <>
+          <View style={styles.background}></View>
+          <View style={styles.contentContainer}>
+            <View style={styles.content}>
+              {renderTextAndIcon()}
+              <View style={styles.formContainer}>
+                {!showPasswordScreen && !showOtpScreen ? (
+                  <>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Email or Mobile Number"
+                      placeholderTextColor="#ffffff"
+                      value={emailOrMobile}
+                      onChangeText={text => setEmailOrMobile(text)}
+                    />
+                    <TouchableOpacity
+                      style={styles.loginButton}
+                      onPress={handleLogin}>
+                      <Text style={styles.loginButtonText}>Next</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : null}
+                {showPasswordScreen ? (
+                  <PasswordComponent
+                    handlePassword={handlePassword}></PasswordComponent>
+                ) : null}
+                {showOtpScreen ? <OtpComponent handleOtp={handleOtp} /> : null}
+              </View>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -163,7 +202,7 @@ const styles = StyleSheet.create({
   },
   textAndIconContainer: {
     flexDirection: 'row',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     // backgroundColor: 'white',

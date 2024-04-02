@@ -40,10 +40,6 @@ const TabBarIcon = props => {
   );
 };
 
-const handleScan = (data) => {
-  // Handle the scanned data as needed
-  console.log('Scanned data:', data);
-};
 
 const Home = props => (
   <View style={{ flex: 1 }}>
@@ -56,7 +52,7 @@ const Pomodoro = props => <Welcome props={props}></Welcome>
 const TodoList = () => (
   <Screen>
     <Logo />
-    <Text>TodoList</Text>
+    <Text>Completed Task List</Text>
   </Screen>
 );
 

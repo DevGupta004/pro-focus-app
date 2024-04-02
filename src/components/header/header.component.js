@@ -1,26 +1,47 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import appConfig from '../../demo-data/appConfig.json'
-import tasksService from '../../../services/tasks/tasksService';
+import appConfig from '../../demo-data/appConfig.json';
+import {useNavigation} from '@react-navigation/native';
+import CreateTaskForm from '../model/modelComponent';
 
+const Header = () => {
+  const [isModelOpen, setModelOpen] = useState(false);
+  const {navigate} = useNavigation();
 
-const Header = ({navigation}) => {
-  console.log("navigation",navigation);
+  console.log('navigation', navigate);
+
+  const rendderModel = () => {
+    return (
+      <CreateTaskForm
+        visible={isModelOpen}
+        onClose={handleModelClose}></CreateTaskForm>
+    );
+  };
+
+  const handleModelClose = () => {
+    setModelOpen(false);
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.iconContainer}>
         <Image
-        source={{ uri: 'https://placekitten.com/100/100' }}
-        style={styles.profileImage}
-      />
+          source={{uri: 'https://placekitten.com/100/100'}}
+          style={styles.profileImage}
+        />
       </TouchableOpacity>
       <Text style={styles.title}>{appConfig.appNAme}</Text>
       <TouchableOpacity style={styles.iconContainer}>
-        <Icon name="add-circle-sharp" size={25} style={styles.icon} onPress={() => navigation.navigate('profile')}/>
+        <Icon
+          name="add-circle-sharp"
+          size={25}
+          style={styles.icon}
+          onPress={() => setModelOpen(true)}
+        />
         <Icon name="notifications" size={25} style={styles.icon} />
       </TouchableOpacity>
+      {isModelOpen && rendderModel()}
     </View>
   );
 };
@@ -56,8 +77,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   icon: {
-    paddingLeft: 16
-  }
+    paddingLeft: 16,
+  },
 });
 
 export default Header;

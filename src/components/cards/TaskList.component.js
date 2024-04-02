@@ -1,14 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Dimensions,
+  RefreshControl,
 } from 'react-native';
+import tasksService from '../../../services/tasks/tasksService';
+const {width} = Dimensions.get('screen');
 
-const TaskCard = ({task}) => {
+const TaskCard = ({task, getFreshTasks}) => {
   const {navigate} = useNavigation();
 
   const startTimer = () => {
@@ -17,22 +21,59 @@ const TaskCard = ({task}) => {
     });
   };
 
+  const deleteTask = async task => {
+    try {
+      const response = await tasksService.deleteTask(task.taskId);
+      console.log('Task deleted', response);
+      getFreshTasks();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{task.title}</Text>
+      <Text style={styles.title}>{task.taskName}</Text>
       <Text style={styles.description}>{task.description}</Text>
-      <TouchableOpacity style={styles.startButton} onPress={() => startTimer()}>
-        <Text style={styles.buttonText}>Start Timer</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => deleteTask(task)}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={() => startTimer()}>
+          <Text style={styles.buttonText}>Start Timer</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-const TaskList = ({tasks}) => {
+const TaskList = ({tasks, getFreshTasks}) => {
+  const [refreshing, setRefreshing] = useState(false); // State variable to track refreshing state
+
+  const handleRefresh = () => {
+    getFreshTasks();
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        // Add RefreshControl component to ScrollView
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          colors={['#9Bd35A', '#689F38']}
+          tintColor="#689F38"
+          title="Refreshing..."
+          titleColor="#689F38"
+        />
+      }>
       {tasks.map((task, index) => (
-        <TaskCard key={index} task={task} />
+        <TaskCard key={index} task={task} getFreshTasks={getFreshTasks} />
       ))}
     </ScrollView>
   );
@@ -40,7 +81,8 @@ const TaskList = ({tasks}) => {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    padding: 20,
+    paddingVertical: 20,
+    width: width - 30,
   },
   card: {
     backgroundColor: '#fff',
@@ -65,8 +107,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   startButton: {
     backgroundColor: '#007bff',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-end',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,

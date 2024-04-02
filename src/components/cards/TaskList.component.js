@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     width: width - 30,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   title: {
+    color: '#000',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 10,
+    color: 'gray',
   },
   buttonContainer: {
     flexDirection: 'row',

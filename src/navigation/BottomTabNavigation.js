@@ -20,7 +20,7 @@ const Screen = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #f2f2f2;
+  background-color: black;
 `;
 
 const Logo = () => (

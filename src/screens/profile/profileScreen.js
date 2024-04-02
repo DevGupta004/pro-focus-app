@@ -1,45 +1,54 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const Profile = props => (
-  <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}>
-    <Image
-      source={require('../../../assets/commingSoon.png')}
-      resizeMode={'center'}
-    />
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => handleLogout(props)}>
-      <Text>Logout</Text>
-    </TouchableOpacity>
-  </View>
-);
+const Profile = () => {
+  const {navigate} = useNavigation();
 
-const handleLogout = async (props) => {
-  try {
-    // Remove user data from AsyncStorage upon logout
-    await AsyncStorage.removeItem('userId');
-    props.navigation.navigate('LoginScreen')
-    // Navigate to the login screen or perform any other necessary actions
-  } catch (error) {
-    console.error('Error removing user data from AsyncStorage:', error);
-  }
+  const handleLogout = async () => {
+    try {
+      AsyncStorage.removeItem('userId').then();
+      navigate('LoginScreen');
+      Alert.alert('user logged out');
+    } catch (error) {
+      console.error('Error removing user data from AsyncStorage:', error);
+    }
+  };
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+      }}>
+      <Image
+        source={require('../../../assets/commingSoon.png')}
+        resizeMode={'center'}
+      />
+      <TouchableOpacity style={styles.container} onPress={() => handleLogout()}>
+        <Text style={{color: '#fff'}}>Logout</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 export default Profile;
-
-
 
 const styles = StyleSheet.create({
   container: {
     width: 300,
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#007bff',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

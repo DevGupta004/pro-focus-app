@@ -13,8 +13,10 @@ import OtpComponent from './components/otpComponent';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../components/loader/loader';
+import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = () => {
+  const {navigate} = useNavigation();
   const [emailOrMobile, setEmailOrMobile] = useState('');
   const [showPasswordScreen, setShowPasswordScreen] = useState(false);
   const [showOtpScreen, setShowOtpScreen] = useState(false);
@@ -25,7 +27,7 @@ const LoginScreen = ({navigation}) => {
     const getUserData = async () => {
       const userId = await AsyncStorage.getItem('userId');
       if (userId) {
-        navigation.navigate('app');
+        navigate('app');
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
@@ -61,7 +63,7 @@ const LoginScreen = ({navigation}) => {
         Alert.alert(`User Created ${getUser._id}`);
       }
     }
-    // navigation.navigate('app');
+    // navigate('app');
   };
 
   const handleOtp = async otp => {
@@ -89,7 +91,9 @@ const LoginScreen = ({navigation}) => {
       if (userData?.isUserVerified && userData.password === password) {
         Alert.alert('User Authenticated successfully');
         await AsyncStorage.setItem('userId', userData?._id);
-        navigation.navigate('app');
+        setShowPasswordScreen(false);
+        setEmailOrMobile('')
+        navigate('app');
       } else if (!userData?.password) {
         const updateUserData = {
           ...userData,
@@ -101,7 +105,7 @@ const LoginScreen = ({navigation}) => {
         );
         setUserData(updateUser);
         Alert.alert('Password Updated successfully');
-        navigation.navigate('app');
+        navigate('app');
       } else {
         Alert.alert('Wrong password');
       }

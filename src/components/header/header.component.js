@@ -25,12 +25,12 @@ const Header = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.iconContainer}>
+      {/* <TouchableOpacity style={styles.iconContainer}>
         <Image
-          source={{uri: 'https://placekitten.com/100/100'}}
+          source={require('../../../ProFocus_412.png') || {uri: 'https://placekitten.com/100/100'}}
           style={styles.profileImage}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Text style={styles.title}>{appConfig.appNAme}</Text>
       <TouchableOpacity style={styles.iconContainer}>
         <Icon
@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     height: 50,
-    backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
   },
   icon: {
     paddingLeft: 16,

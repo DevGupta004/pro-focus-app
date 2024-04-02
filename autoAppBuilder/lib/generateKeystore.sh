@@ -7,7 +7,7 @@ echo $appId
 
 # Remove keystore & json if exists
 rm ./$appId.keystore
-rm ./fingerprintData
+rm -rf ./fingerprintData
 
 
 keystore="$appId.keystore"

@@ -6,22 +6,23 @@ init();
 
 async function init() {
   try {
-    const {appName, packageName} = data;
-    console.log('data', appName, packageName);
+    const {appName, packageName, prodBuild} = data;
+    console.log('data', appName, packageName, prodBuild);
     if (appName && packageName) {
-      await buildApp(appName,packageName);
+      await buildApp(appName,packageName, prodBuild);
     }
   } catch (error) {
     console.log("Error Inside init fun", error);
   }
 }
 
-async function buildApp(appName, packageName) {
+async function buildApp(appName, packageName, prodBuild) {
   try {
     commandArr = [
       `./AppBuilder.sh`,
       `--appName`, `${appName}`,
       `--packageName`, `${packageName}`,
+      `--prodBuild`, `${prodBuild}`,
     ];
     await RunShScript(commandArr);
   } catch (error) {
